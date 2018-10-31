@@ -22,4 +22,9 @@ public class ImageDecoder extends ReplayingDecoder<Void> {
 
 		out.add(captureImage);
 	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		cause.printStackTrace();
+	}
 }
