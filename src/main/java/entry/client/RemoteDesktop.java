@@ -23,7 +23,7 @@ public class RemoteDesktop {
 			if (client.connectServer("localhost")) {
 				if (client != null)
 					// send a message to wake server up to send capture
-					client.channel.writeAndFlush(Unpooled.copiedBuffer("start".getBytes()));
+					client.channel.writeAndFlush(Unpooled.copiedBuffer("ACK".getBytes()));
 			}
 
 			// initial frame

@@ -1,6 +1,7 @@
 package entry.client;
 
 import entry.share.CaptureImage;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -22,6 +23,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		// accept msg from ImageDecoder
 		CaptureImage captureImage = (CaptureImage) msg;
 		RemoteDesktop.panel.display(captureImage.getContent());
+		ctx.writeAndFlush(Unpooled.copiedBuffer("ACK".getBytes()));// send ACK after painting an image
 	}
 
 	@Override
