@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
@@ -46,24 +47,45 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		ByteBuf buf = (ByteBuf) msg;
-		byte[] data = new byte[buf.readableBytes()];
-		buf.readBytes(data);
 		try {
-			String message = new String(data, "utf-8");
-			if (message.equals("ACK")) {
+			String message = (String) msg;
+			switch (message.substring(0, 20).trim()) {
+			case "ACK":
 				image = robot.createScreenCapture(rect);
 				ImageIO.write(image, "jpg", baos);
 				captureImage.setLength(baos.toByteArray().length);
 				captureImage.setContent(baos.toByteArray());
 				ctx.writeAndFlush(captureImage);
-				Thread.sleep(100);
 				baos.reset();
+				break;
+			case "moveTo":
+				int x = Integer.valueOf(message.substring(20, 30).trim());
+				int y = Integer.valueOf(message.substring(30).trim());
+				robot.mouseMove(x, y);
+				break;
+			case "leftClick":
+				robot.mousePress(InputEvent.BUTTON1_MASK);
+				robot.mouseRelease(InputEvent.BUTTON1_MASK);
+				break;
+			case "rightClick":
+				robot.mousePress(InputEvent.BUTTON3_MASK);
+				robot.mouseRelease(InputEvent.BUTTON3_MASK);
+				break;
+			case "leftDown":
+				robot.mousePress(InputEvent.BUTTON1_MASK);
+				break;
+			case "leftUp":
+				robot.mouseRelease(InputEvent.BUTTON1_MASK);
+				break;
+			case "wheel":
+				int wheelAmt = Integer.valueOf(message.substring(20, 30).trim());
+				robot.mouseWheel(wheelAmt);
+				break;
+			default:
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			buf.release();
 		}
 	}
 
@@ -74,6 +96,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		cause.printStackTrace();
+		// cause.printStackTrace();
+		System.err.println("An existing connection was forcibly closed by the remote host");
 	}
 }
