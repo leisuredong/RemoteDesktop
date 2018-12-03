@@ -8,8 +8,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.CharsetUtil;
 
 public class Server {
 	public static void main(String[] args) {
@@ -30,7 +33,8 @@ public class Server {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
 							ChannelPipeline pipeline = ch.pipeline();
-							pipeline.addLast(new ImageEncoder(), new ServerHandler());
+							pipeline.addLast(new ImageEncoder());
+							pipeline.addLast(new LineBasedFrameDecoder(1024), new StringDecoder(CharsetUtil.UTF_8), new ServerHandler());
 						}
 					});
 			ChannelFuture future = bootstrap.bind(8095);

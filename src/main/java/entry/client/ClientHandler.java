@@ -22,7 +22,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		// accept msg from ImageDecoder
 		CaptureImage captureImage = (CaptureImage) msg;
 		RemoteDesktop.panel.display(captureImage.getContent());
-		String message = String.format("%20s", "ACK");
+		String message = String.format("%20s", "ACK");// send ACK after painting an image
 		ctx.writeAndFlush(message + '\n');
 	}
 
