@@ -81,11 +81,24 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 				int wheelAmt = Integer.valueOf(message.substring(20, 30).trim());
 				robot.mouseWheel(wheelAmt);
 				break;
+			case "keyType":
+				int keycode = Integer.valueOf(message.substring(20, 30).trim());
+				robot.keyPress(keycode);
+				robot.keyRelease(keycode);
+				break;
+			case "keyDown":
+				int keycode1 = Integer.valueOf(message.substring(20, 30).trim());
+				robot.keyPress(keycode1);
+				break;
+			case "keyUp":
+				int keycode2 = Integer.valueOf(message.substring(20, 30).trim());
+				robot.keyRelease(keycode2);
+				break;
 			default:
 				break;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
