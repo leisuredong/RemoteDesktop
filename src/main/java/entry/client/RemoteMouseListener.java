@@ -29,6 +29,7 @@ public class RemoteMouseListener extends MouseAdapter {
 		default:
 			break;
 		}
+		RemoteDesktop.panel.requestFocus();
 	}
 
 	@Override

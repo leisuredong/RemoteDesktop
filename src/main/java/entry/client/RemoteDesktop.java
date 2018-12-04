@@ -9,25 +9,26 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import io.netty.buffer.Unpooled;
-
 public class RemoteDesktop {
 
 	public static MyPanel panel;
 	private RemoteMouseListener remoteMouseListener;
+	private RemoteKeyListener remoteKeyListener;
 
 	public RemoteDesktop() {
 		remoteMouseListener = new RemoteMouseListener();
+		remoteKeyListener = new RemoteKeyListener();
 		// initial frame
 		JFrame frame = new JFrame();
 		panel = new MyPanel();
 		frame.add(panel);
 		frame.setSize(1600, 900);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		panel.addMouseListener(remoteMouseListener);
 		panel.addMouseMotionListener(remoteMouseListener);
 		panel.addMouseWheelListener(remoteMouseListener);
+		panel.addKeyListener(remoteKeyListener);
 	}
 
 	public static void main(String[] args) {
@@ -41,6 +42,7 @@ public class RemoteDesktop {
 					client.channel.writeAndFlush(message + '\n');
 				}
 				new RemoteDesktop();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
