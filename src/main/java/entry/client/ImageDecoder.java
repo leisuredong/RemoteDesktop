@@ -25,6 +25,7 @@ public class ImageDecoder extends ReplayingDecoder<Void> {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		cause.printStackTrace();
+		// cause.printStackTrace();
+		System.err.println("An existing connection was forcibly closed by the remote host");
 	}
 }
